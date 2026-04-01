@@ -119,7 +119,7 @@ def get_db_connection():
     """Get database connection"""
     try:
         connection = psycopg2.connect(
-            host=os.getenv("DB_HOST", "localhost"),
+            host=os.getenv("DB_HOST", "postgres"),
             database=os.getenv("DB_NAME", "green_engine"),
             user=os.getenv("DB_USER", "green_user"),
             password=os.getenv("DB_PASSWORD", "password"),
@@ -833,7 +833,7 @@ async def get_forecast(
         # Build DB connection string for models
         db_dsn = (
             f"postgresql://{os.getenv('DB_USER', 'green_user')}:{os.getenv('DB_PASSWORD', 'password')}@"
-            f"{os.getenv('DB_HOST', 'localhost')}:{os.getenv('DB_PORT', '5432')}/"
+            f"{os.getenv('DB_HOST', 'postgres')}:{os.getenv('DB_PORT', '5432')}/"
             f"{os.getenv('DB_NAME', 'green_engine')}"
         )
         models = GrowthForecastingModels(db_dsn)
@@ -913,7 +913,7 @@ async def get_growth_forecast(
             try:
                 db_dsn = (
                     f"postgresql://{os.getenv('DB_USER', 'green_user')}:{os.getenv('DB_PASSWORD', 'password')}@"
-                    f"{os.getenv('DB_HOST', 'localhost')}:{os.getenv('DB_PORT', '5432')}/"
+                    f"{os.getenv('DB_HOST', 'postgres')}:{os.getenv('DB_PORT', '5432')}/"
                     f"{os.getenv('DB_NAME', 'green_engine')}"
                 )
                 models = GrowthForecastingModels(db_dsn)

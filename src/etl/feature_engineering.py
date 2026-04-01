@@ -28,7 +28,7 @@ class FeatureEngineeringPipeline:
         self.db_engine = create_engine(
             f"postgresql://{os.getenv('DB_USER', 'green_user')}:"
             f"{os.getenv('DB_PASSWORD', 'password')}@"
-            f"{os.getenv('DB_HOST', 'localhost')}:"
+            f"{os.getenv('DB_HOST', 'postgres')}:"
             f"{os.getenv('DB_PORT', '5432')}/"
             f"{os.getenv('DB_NAME', 'green_engine')}"
         )

@@ -55,7 +55,7 @@ class GreenEngineMQTTClient:
         """Initialize database connection"""
         try:
             self.db_connection = psycopg2.connect(
-                host=os.getenv("DB_HOST", "localhost"),
+                host=os.getenv("DB_HOST", "postgres"),
                 database=os.getenv("DB_NAME", "green_engine"),
                 user=os.getenv("DB_USER", "green_user"),
                 password=os.getenv("DB_PASSWORD", "password"),

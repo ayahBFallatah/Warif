@@ -138,7 +138,7 @@ nano .env
 **Environment Variables:**
 ```bash
 # Database Configuration
-DB_HOST=localhost
+DB_HOST=postgres
 DB_NAME=green_engine
 DB_USER=green_user
 DB_PASSWORD=green_pass
@@ -447,7 +447,7 @@ services:
     environment:
       POSTGRES_DB: green_engine
       POSTGRES_USER: green_user
-      POSTGRES_PASSWORD: green_pass
+      POSTGRES_PASSWORD: green_password
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./infrastructure/postgres/init:/docker-entrypoint-initdb.d

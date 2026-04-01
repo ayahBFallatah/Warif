@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set environment variables
-export DB_HOST=localhost
+export DB_HOST=postgres
 export DB_NAME=green_engine
 export DB_USER=green_user
 export DB_PASSWORD=green_pass

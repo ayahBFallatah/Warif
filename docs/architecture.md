@@ -147,7 +147,7 @@ services:
     environment:
       POSTGRES_DB: green_engine
       POSTGRES_USER: green_user
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_PASSWORD: green_password
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
@@ -168,7 +168,7 @@ services:
     depends_on:
       - postgres
     environment:
-      DATABASE_URL: postgresql://green_user:${DB_PASSWORD}@postgres:5432/green_engine
+      DATABASE_URL: postgresql://green_user:${DB_PASSWORD:-secure_password_123}@postgres:5432/green_engine
 
   dashboard:
     build: ./dashboard
@@ -184,7 +184,7 @@ services:
     depends_on:
       - postgres
     environment:
-      DATABASE_URL: postgresql://green_user:${DB_PASSWORD}@postgres:5432/green_engine
+      DATABASE_URL: postgresql://green_user:${DB_PASSWORD:-secure_password_123}@postgres:5432/green_engine
 ```
 
 ## Data Flow
