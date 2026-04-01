@@ -1,0 +1,171 @@
+# Green Engine Alerting Rules
+groups:
+  - name: green_engine_api
+    rules:
+      - alert: APIHighErrorRate
+        expr: rate(green_engine_api_requests_total{status=~"5.."}[5m]) > 0.1
+        for: 2m
+        labels:
+          severity: critical
+          service: api
+        annotations:
+          summary: "High error rate detected in Green Engine API"
+          description: "API error rate is {{ $value }} errors per second for the last 5 minutes"
+
+      - alert: APIHighResponseTime
+        expr: histogram_quantile(0.95, rate(green_engine_api_request_duration_seconds_bucket[5m])) > 2
+        for: 5m
+        labels:
+          severity: warning
+          service: api
+        annotations:
+          summary: "High response time detected in Green Engine API"
+          description: "95th percentile response time is {{ $value }} seconds"
+
+      - alert: APIDown
+        expr: up{job="green-engine-api"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: api
+        annotations:
+          summary: "Green Engine API is down"
+          description: "API has been down for more than 1 minute"
+
+  - name: green_engine_worker
+    rules:
+      - alert: WorkerDown
+        expr: up{job="green-engine-worker"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: worker
+        annotations:
+          summary: "Green Engine Command Worker is down"
+          description: "Command worker has been down for more than 1 minute"
+
+      - alert: WorkerHighCommandQueue
+        expr: green_engine_worker_commands_queued > 100
+        for: 5m
+        labels:
+          severity: warning
+          service: worker
+        annotations:
+          summary: "High command queue in worker"
+          description: "Command queue has {{ $value }} pending commands"
+
+      - alert: WorkerHighFailureRate
+        expr: rate(green_engine_worker_commands_failed_total[5m]) > 0.1
+        for: 2m
+        labels:
+          severity: warning
+          service: worker
+        annotations:
+          summary: "High command failure rate in worker"
+          description: "Command failure rate is {{ $value }} failures per second"
+
+  - name: green_engine_database
+    rules:
+      - alert: DatabaseDown
+        expr: up{job="postgres"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: database
+        annotations:
+          summary: "PostgreSQL database is down"
+          description: "Database has been down for more than 1 minute"
+
+      - alert: DatabaseHighConnections
+        expr: pg_stat_database_numbackends / pg_settings_max_connections > 0.8
+        for: 5m
+        labels:
+          severity: warning
+          service: database
+        annotations:
+          summary: "High database connection usage"
+          description: "Database connection usage is {{ $value }}%"
+
+      - alert: DatabaseHighDiskUsage
+        expr: (pg_database_size_bytes / 1024 / 1024 / 1024) > 10
+        for: 5m
+        labels:
+          severity: warning
+          service: database
+        annotations:
+          summary: "High database disk usage"
+          description: "Database size is {{ $value }} GB"
+
+  - name: green_engine_mqtt
+    rules:
+      - alert: MQTTBrokerDown
+        expr: up{job="mosquitto"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: mqtt
+        annotations:
+          summary: "MQTT broker is down"
+          description: "Mosquitto broker has been down for more than 1 minute"
+
+      - alert: MQTTHighMessageRate
+        expr: rate(mosquitto_messages_received_total[5m]) > 1000
+        for: 5m
+        labels:
+          severity: warning
+          service: mqtt
+        annotations:
+          summary: "High MQTT message rate"
+          description: "MQTT message rate is {{ $value }} messages per second"
+
+  - name: green_engine_system
+    rules:
+      - alert: HighCPUUsage
+        expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 5m
+        labels:
+          severity: warning
+          service: system
+        annotations:
+          summary: "High CPU usage detected"
+          description: "CPU usage is {{ $value }}% on {{ $labels.instance }}"
+
+      - alert: HighMemoryUsage
+        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+          service: system
+        annotations:
+          summary: "High memory usage detected"
+          description: "Memory usage is {{ $value }}% on {{ $labels.instance }}"
+
+      - alert: HighDiskUsage
+        expr: (1 - (node_filesystem_avail_bytes / node_filesystem_size_bytes)) * 100 > 90
+        for: 5m
+        labels:
+          severity: critical
+          service: system
+        annotations:
+          summary: "High disk usage detected"
+          description: "Disk usage is {{ $value }}% on {{ $labels.instance }}"
+
+      - alert: ContainerHighMemoryUsage
+        expr: container_memory_usage_bytes / container_spec_memory_limit_bytes > 0.8
+        for: 5m
+        labels:
+          severity: warning
+          service: container
+        annotations:
+          summary: "Container high memory usage"
+          description: "Container {{ $labels.name }} memory usage is {{ $value }}%"
+
+      - alert: ContainerHighCPUUsage
+        expr: rate(container_cpu_usage_seconds_total[5m]) > 0.8
+        for: 5m
+        labels:
+          severity: warning
+          service: container
+        annotations:
+          summary: "Container high CPU usage"
+          description: "Container {{ $labels.name }} CPU usage is {{ $value }}%"
