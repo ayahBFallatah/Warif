@@ -23,7 +23,8 @@ st.set_page_config(
 )
 
 # API configuration
-API_BASE_URL = "http://localhost:8020"
+# API_BASE_URL = "http://localhost:8020"
+API_BASE_URL = "http://localhost:8010"
 
 # Authentication configuration
 AUTH_REQUIRED = False  # Set to False to disable authentication

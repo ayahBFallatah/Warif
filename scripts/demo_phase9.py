@@ -13,7 +13,7 @@ from typing import Dict, Any, Optional
 
 class Phase9Demo:
     def __init__(self):
-        self.api_base_url = "http://localhost:8020"
+        self.api_base_url = "http://localhost:8010"
         self.auth_token = None
         self.current_user = None
         

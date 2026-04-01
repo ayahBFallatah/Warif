@@ -91,7 +91,7 @@ A comprehensive IoT-based smart greenhouse management system with real-time moni
 6. **Start the system**
    ```bash
    # Start API server
-   python -m uvicorn src.api.main:app --host 0.0.0.0 --port 8020 --reload
+   python -m uvicorn src.api.main:app --host 0.0.0.0 --port 8010 --reload
    
    # In another terminal, start dashboard
    cd dashboard
@@ -100,8 +100,8 @@ A comprehensive IoT-based smart greenhouse management system with real-time moni
 
 7. **Access the system**
    - Dashboard: http://localhost:8501
-   - API: http://localhost:8020
-   - API Docs: http://localhost:8020/docs
+   - API: http://localhost:8010
+   - API Docs: http://localhost:8010/docs
 
 ## 🐳 Docker Deployment
 

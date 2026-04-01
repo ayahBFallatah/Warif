@@ -25,4 +25,4 @@ echo "  JWT_SECRET_KEY: ${JWT_SECRET_KEY:0:20}..."
 echo "  AUTH_REQUIRED: $AUTH_REQUIRED"
 
 # Start the API server
-python3 -m uvicorn src.api.main:app --host 0.0.0.0 --port 8020 --reload
+python3 -m uvicorn src.api.main:app --host 0.0.0.0 --port 8010 --reload

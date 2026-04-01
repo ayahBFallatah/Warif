@@ -2,7 +2,7 @@
 FastAPI REST API for Green Engine
 Provides endpoints for sensor data, predictions, and analytics
 """
-
+from fastapi.openapi.utils import get_openapi
 from fastapi import FastAPI, HTTPException, Depends, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -1057,5 +1057,5 @@ async def retrain_models():
 if __name__ == "__main__":
     import uvicorn
     import os as _os
-    _port = int(_os.getenv("PORT", "8020"))
+    _port = int(_os.getenv("PORT", "8010"))
     uvicorn.run(app, host="0.0.0.0", port=_port)

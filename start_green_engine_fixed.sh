@@ -19,8 +19,8 @@ export AUTH_REQUIRED=false
 echo "🚀 Starting Green Engine with Virtual Environment..."
 
 # Start API server in background
-echo "Starting API server on port 8020..."
-python3 -m uvicorn src.api.main:app --host 0.0.0.0 --port 8020 --reload &
+echo "Starting API server on port 8010..."
+python3 -m uvicorn src.api.main:app --host 0.0.0.0 --port 8010 --reload &
 API_PID=$!
 
 # Wait for API to start
@@ -34,7 +34,7 @@ DASHBOARD_PID=$!
 
 echo "✅ Green Engine started successfully!"
 echo "📊 Dashboard: http://localhost:8501"
-echo "🔗 API: http://localhost:8020"
+echo "🔗 API: http://localhost:8010"
 echo ""
 echo "Press Ctrl+C to stop all services"
 
