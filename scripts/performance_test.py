@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Green Engine Performance Testing Script
+Warif Performance Testing Script
 Tests system performance under various load conditions
 """
 
@@ -259,7 +259,7 @@ class PerformanceTester:
     
     def run_comprehensive_test(self):
         """Run comprehensive performance test suite"""
-        print("🚀 Starting Green Engine Performance Testing...")
+        print("🚀 Starting Warif Performance Testing...")
         print("=" * 60)
         
         # Test API health first
@@ -323,7 +323,7 @@ class PerformanceTester:
 
 def main():
     """Main function"""
-    parser = argparse.ArgumentParser(description="Green Engine Performance Testing")
+    parser = argparse.ArgumentParser(description="Warif Performance Testing")
     parser.add_argument("--api-url", default="http://localhost:8010", help="API base URL")
     parser.add_argument("--quick", action="store_true", help="Run quick performance test")
     parser.add_argument("--endpoint", help="Test specific endpoint only")

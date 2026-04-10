@@ -1,5 +1,5 @@
 """
-Green Engine Authentication API
+Warif Authentication API
 REST endpoints for user authentication and management
 """
 

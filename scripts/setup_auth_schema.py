@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Green Engine Authentication Schema Setup
+Warif Authentication Schema Setup
 Creates user management and RBAC database tables
 """
 
@@ -20,8 +20,8 @@ def get_db_connection():
     """Get database connection"""
     return psycopg2.connect(
         host=os.getenv("DB_HOST", "postgres"),
-        database=os.getenv("DB_NAME", "green_engine"),
-        user=os.getenv("DB_USER", "green_user"),
+        database=os.getenv("DB_NAME", "warif"),
+        user=os.getenv("DB_USER", "warif_user"),
         password=os.getenv("DB_PASSWORD", "password"),
         port=os.getenv("DB_PORT", "5432")
     )
@@ -301,7 +301,7 @@ def create_default_admin_user():
             INSERT INTO users (username, email, password_hash, first_name, last_name, is_active, is_verified)
             VALUES (%s, %s, %s, %s, %s, %s, %s)
             RETURNING id
-        """, ("admin", "admin@greenengine.com", password_hash, "System", "Administrator", True, True))
+        """, ("admin", "admin@warif.com", password_hash, "System", "Administrator", True, True))
         
         user_id = cursor.fetchone()[0]
         
@@ -339,7 +339,7 @@ def create_sample_users():
         sample_users = [
             {
                 "username": "operator1",
-                "email": "operator1@greenengine.com",
+                "email": "operator1@warif.com",
                 "password": "operator123",
                 "first_name": "John",
                 "last_name": "Operator",
@@ -347,7 +347,7 @@ def create_sample_users():
             },
             {
                 "username": "viewer1",
-                "email": "viewer1@greenengine.com",
+                "email": "viewer1@warif.com",
                 "password": "viewer123",
                 "first_name": "Jane",
                 "last_name": "Viewer",
@@ -399,7 +399,7 @@ def create_sample_users():
 
 def main():
     """Main function"""
-    print("🚀 Setting up Green Engine Authentication Schema...")
+    print("🚀 Setting up Warif Authentication Schema...")
     print("=" * 60)
     
     try:

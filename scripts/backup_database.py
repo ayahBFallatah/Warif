@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Green Engine Database Backup Script
+Warif Database Backup Script
 Creates automated backups of the PostgreSQL database
 """
 
@@ -31,8 +31,8 @@ logger = logging.getLogger(__name__)
 class DatabaseBackup:
     def __init__(self):
         self.db_host = os.getenv("DB_HOST", "localhost")
-        self.db_name = os.getenv("DB_NAME", "green_engine")
-        self.db_user = os.getenv("DB_USER", "green_user")
+        self.db_name = os.getenv("DB_NAME", "warif")
+        self.db_user = os.getenv("DB_USER", "warif_user")
         self.db_password = os.getenv("DB_PASSWORD", "password")
         self.db_port = os.getenv("DB_PORT", "5432")
         
@@ -45,7 +45,7 @@ class DatabaseBackup:
     def create_backup(self):
         """Create a database backup"""
         timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-        backup_filename = f"green_engine_backup_{timestamp}.sql"
+        backup_filename = f"warif_backup_{timestamp}.sql"
         backup_path = self.backup_dir / backup_filename
         
         logger.info(f"Creating database backup: {backup_path}")
@@ -160,7 +160,7 @@ class DatabaseBackup:
     def list_backups(self):
         """List available backups"""
         backups = []
-        for backup_file in self.backup_dir.glob("green_engine_backup_*.sql.gz"):
+        for backup_file in self.backup_dir.glob("warif_backup_*.sql.gz"):
             stat = backup_file.stat()
             backups.append({
                 'filename': backup_file.name,
@@ -180,7 +180,7 @@ class DatabaseBackup:
         cutoff_date = datetime.datetime.now() - datetime.timedelta(days=self.retention_days)
         removed_count = 0
         
-        for backup_file in self.backup_dir.glob("green_engine_backup_*.sql.gz"):
+        for backup_file in self.backup_dir.glob("warif_backup_*.sql.gz"):
             if datetime.datetime.fromtimestamp(backup_file.stat().st_ctime) < cutoff_date:
                 logger.info(f"Removing old backup: {backup_file.name}")
                 backup_file.unlink()
@@ -214,7 +214,7 @@ def main():
     """Main function"""
     import argparse
     
-    parser = argparse.ArgumentParser(description="Green Engine Database Backup Tool")
+    parser = argparse.ArgumentParser(description="Warif Database Backup Tool")
     parser.add_argument("action", choices=["backup", "restore", "list", "cleanup", "status"], 
                        help="Action to perform")
     parser.add_argument("--backup-file", help="Backup file for restore action")

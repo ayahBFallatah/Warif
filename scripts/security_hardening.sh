@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Green Engine Security Hardening Script
+# Warif Security Hardening Script
 # This script implements security best practices for production deployment
 
 set -e  # Exit on any error
@@ -358,7 +358,7 @@ harden_firewall() {
     sudo ufw allow 80/tcp
     sudo ufw allow 443/tcp
     
-    # Allow Green Engine ports
+    # Allow Warif ports
     sudo ufw allow 8010/tcp  # API
     sudo ufw allow 8501/tcp  # Dashboard
     sudo ufw allow 9090/tcp  # Prometheus
@@ -382,7 +382,7 @@ harden_ssl() {
     # Create SSL configuration for Traefik
     sudo mkdir -p /etc/ssl/green-engine
     sudo tee /etc/ssl/green-engine/ssl.conf > /dev/null << EOF
-# SSL Configuration for Green Engine
+# SSL Configuration for Warif
 
 # Disable weak protocols
 SSLProtocol -all +TLSv1.2 +TLSv1.3
@@ -596,7 +596,7 @@ create_security_script() {
     sudo tee /usr/local/bin/green-engine-security.sh > /dev/null << 'EOF'
 #!/bin/bash
 
-# Green Engine Security Maintenance Script
+# Warif Security Maintenance Script
 
 # Check for security updates
 echo "Checking for security updates..."
@@ -633,7 +633,7 @@ EOF
 
 # Main function
 main() {
-    log_info "Starting Green Engine security hardening..."
+    log_info "Starting Warif security hardening..."
     
     harden_system
     harden_docker

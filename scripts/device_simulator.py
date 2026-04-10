@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Green Engine Device Simulator
+Warif Device Simulator
 Simulates real IoT devices sending MQTT telemetry data
 """
 
@@ -174,7 +174,7 @@ class DeviceSimulator:
             logger.info("✅ Connected to MQTT broker successfully")
             # Subscribe to command topics for each device
             for device_id in self.devices.keys():
-                command_topic = f"greenengine/{device_id}/cmd"
+                command_topic = f"warif/{device_id}/cmd"
                 client.subscribe(command_topic)
                 logger.info(f"📡 Subscribed to command topic: {command_topic}")
         else:
@@ -233,7 +233,7 @@ class DeviceSimulator:
         """Publish telemetry data for a device"""
         try:
             message = self._create_telemetry_message(device_id)
-            topic = f"greenengine/{device_id}/telemetry"
+            topic = f"warif/{device_id}/telemetry"
             
             # Publish with QoS 1 for reliability
             result = self.client.publish(topic, json.dumps(message), qos=1)
@@ -260,7 +260,7 @@ class DeviceSimulator:
     
     def start_simulation(self, telemetry_interval: float = 30.0):
         """Start the device simulation"""
-        logger.info("🚀 Starting Green Engine Device Simulation...")
+        logger.info("🚀 Starting Warif Device Simulation...")
         
         # Create MQTT client
         self.client = mqtt.Client()
@@ -349,7 +349,7 @@ def main():
     
     # Parse command line arguments
     import argparse
-    parser = argparse.ArgumentParser(description="Green Engine Device Simulator")
+    parser = argparse.ArgumentParser(description="Warif Device Simulator")
     parser.add_argument("--broker", default="localhost", help="MQTT broker host")
     parser.add_argument("--port", type=int, default=1883, help="MQTT broker port")
     parser.add_argument("--interval", type=float, default=30.0, help="Telemetry interval in seconds")

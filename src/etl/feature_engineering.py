@@ -1,5 +1,5 @@
 """
-Feature Engineering Pipeline for Green Engine
+Feature Engineering Pipeline for Warif
 Processes raw sensor data into ML-ready features
 """
 
@@ -26,11 +26,11 @@ class FeatureEngineeringPipeline:
     
     def __init__(self):
         self.db_engine = create_engine(
-            f"postgresql://{os.getenv('DB_USER', 'green_user')}:"
+            f"postgresql://{os.getenv('DB_USER', 'warif_user')}:"
             f"{os.getenv('DB_PASSWORD', 'password')}@"
             f"{os.getenv('DB_HOST', 'postgres')}:"
             f"{os.getenv('DB_PORT', '5432')}/"
-            f"{os.getenv('DB_NAME', 'green_engine')}"
+            f"{os.getenv('DB_NAME', 'warif')}"
         )
     
     def get_raw_sensor_data(self, location: str, start_time: datetime, end_time: datetime) -> pd.DataFrame:

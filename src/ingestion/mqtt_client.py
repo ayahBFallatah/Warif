@@ -1,5 +1,5 @@
 """
-MQTT Client for Green Engine Sensor Data Ingestion
+MQTT Client for Warif Sensor Data Ingestion
 Handles real-time sensor data collection from IoT devices
 """
 
@@ -56,8 +56,8 @@ class GreenEngineMQTTClient:
         try:
             self.db_connection = psycopg2.connect(
                 host=os.getenv("DB_HOST", "postgres"),
-                database=os.getenv("DB_NAME", "green_engine"),
-                user=os.getenv("DB_USER", "green_user"),
+                database=os.getenv("DB_NAME", "warif"),
+                user=os.getenv("DB_USER", "warif_user"),
                 password=os.getenv("DB_PASSWORD", "password"),
                 port=os.getenv("DB_PORT", "5432")
             )
