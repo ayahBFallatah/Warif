@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Simplified Green Engine Database Setup for Local Development
+Simplified Warif Database Setup for Local Development
 This version doesn't require TimescaleDB extension
 """
 
@@ -17,8 +17,8 @@ def get_db_connection():
     try:
         connection = psycopg2.connect(
             host=os.getenv("DB_HOST", "postgres"),
-            database=os.getenv("DB_NAME", "green_engine"),
-            user=os.getenv("DB_USER", "green_user"),
+            database=os.getenv("DB_NAME", "warif"),
+            user=os.getenv("DB_USER", "warif_user"),
             password=os.getenv("DB_PASSWORD", "password"),
             port=os.getenv("DB_PORT", "5432")
         )
@@ -272,7 +272,7 @@ def insert_initial_config(connection):
 
 def main():
     """Main function to set up the database"""
-    print("🚀 Setting up Green Engine Database (Local Development)...")
+    print("🚀 Setting up Warif Database (Local Development)...")
     print("=" * 60)
     
     # Connect to database

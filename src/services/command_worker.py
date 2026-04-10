@@ -22,8 +22,8 @@ logger = logging.getLogger(__name__)
 def get_db_connection():
     return psycopg2.connect(
         host=os.getenv("DB_HOST", "postgres"),
-        database=os.getenv("DB_NAME", "green_engine"),
-        user=os.getenv("DB_USER", "green_user"),
+        database=os.getenv("DB_NAME", "warif"),
+        user=os.getenv("DB_USER", "warif_user"),
         password=os.getenv("DB_PASSWORD", "password"),
         port=os.getenv("DB_PORT", "5432"),
     )
@@ -32,7 +32,7 @@ def get_db_connection():
 def publish(device_id: str, command: dict) -> bool:
     broker_host = os.getenv("MQTT_BROKER", "localhost")
     broker_port = int(os.getenv("MQTT_PORT", "1883"))
-    base = os.getenv("MQTT_CMD_BASE", "greenengine")
+    base = os.getenv("MQTT_CMD_BASE", "warif")
     topic = f"{base}/{device_id}/cmd"
     try:
         client = mqtt.Client()

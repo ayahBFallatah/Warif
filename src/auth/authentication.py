@@ -1,5 +1,5 @@
 """
-Green Engine Authentication Service
+Warif Authentication Service
 Handles user authentication, JWT tokens, and session management
 """
 
@@ -54,8 +54,8 @@ class AuthenticationService:
         """Get database connection"""
         return psycopg2.connect(
             host=os.getenv("DB_HOST", "postgres"),
-            database=os.getenv("DB_NAME", "green_engine"),
-            user=os.getenv("DB_USER", "green_user"),
+            database=os.getenv("DB_NAME", "warif"),
+            user=os.getenv("DB_USER", "warif_user"),
             password=os.getenv("DB_PASSWORD", "password"),
             port=os.getenv("DB_PORT", "5432")
         )

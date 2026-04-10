@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Database setup script for Green Engine
+Database setup script for Warif
 Creates database schema and initializes tables
 """
 
@@ -22,8 +22,8 @@ def create_database_schema():
     # Database connection parameters
     db_params = {
         'host': os.getenv('DB_HOST', 'postgres'),
-        'database': os.getenv('DB_NAME', 'green_engine'),
-        'user': os.getenv('DB_USER', 'green_user'),
+        'database': os.getenv('DB_NAME', 'warif'),
+        'user': os.getenv('DB_USER', 'warif_user'),
         'password': os.getenv('DB_PASSWORD', 'password'),
         'port': os.getenv('DB_PORT', '5432')
     }
@@ -351,8 +351,8 @@ def insert_sample_data():
     
     db_params = {
         'host': os.getenv('DB_HOST', 'postgres'),
-        'database': os.getenv('DB_NAME', 'green_engine'),
-        'user': os.getenv('DB_USER', 'green_user'),
+        'database': os.getenv('DB_NAME', 'warif'),
+        'user': os.getenv('DB_USER', 'warif_user'),
         'password': os.getenv('DB_PASSWORD', 'password'),
         'port': os.getenv('DB_PORT', '5432')
     }
@@ -391,7 +391,7 @@ def insert_sample_data():
             conn.close()
 
 if __name__ == "__main__":
-    print("Setting up Green Engine database...")
+    print("Setting up Warif database...")
     create_database_schema()
     insert_sample_data()
     print("Database setup completed successfully!")

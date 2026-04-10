@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Green Engine Production Deployment Script
-# This script deploys the Green Engine system to production
+# Warif Production Deployment Script
+# This script deploys the Warif system to production
 
 set -e  # Exit on any error
 
@@ -13,7 +13,7 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-PROJECT_NAME="green_engine"
+PROJECT_NAME="warif"
 COMPOSE_FILE="docker-compose.prod.yml"
 ENV_FILE=".env"
 
@@ -119,7 +119,7 @@ setup_mosquitto_config() {
     log_info "Setting up Mosquitto configuration..."
     
     cat > infrastructure/mosquitto/config/mosquitto.conf << EOF
-# Mosquitto Configuration for Green Engine
+# Mosquitto Configuration for Warif
 
 # General settings
 pid_file /var/run/mosquitto.pid
@@ -152,25 +152,25 @@ acl_file /mosquitto/config/acl.conf
 EOF
 
     cat > infrastructure/mosquitto/config/acl.conf << EOF
-# Access Control List for Green Engine
+# Access Control List for Warif
 
 # Allow all users to read from telemetry topics
-topic read greenengine/+/telemetry
+topic read warif/+/telemetry
 
 # Allow all users to write to telemetry topics
-topic write greenengine/+/telemetry
+topic write warif/+/telemetry
 
 # Allow all users to read from command topics
-topic read greenengine/+/cmd
+topic read warif/+/cmd
 
 # Allow all users to write to command topics
-topic write greenengine/+/cmd
+topic write warif/+/cmd
 
 # Allow all users to read from status topics
-topic read greenengine/+/status
+topic read warif/+/status
 
 # Allow all users to write to status topics
-topic write greenengine/+/status
+topic write warif/+/status
 EOF
 
     log_success "Mosquitto configuration created"
@@ -202,7 +202,7 @@ wait_for_services() {
     
     # Wait for database
     log_info "Waiting for database..."
-    timeout 60 bash -c 'until docker-compose -f "$COMPOSE_FILE" exec postgres pg_isready -U green_user -d green_engine; do sleep 2; done'
+    timeout 60 bash -c 'until docker-compose -f "$COMPOSE_FILE" exec postgres pg_isready -U warif_user -d warif; do sleep 2; done'
     
     # Wait for API
     log_info "Waiting for API..."
@@ -219,7 +219,7 @@ setup_database() {
     log_info "Setting up database..."
     
     # Run database setup
-    docker-compose -f "$COMPOSE_FILE" exec postgres psql -U green_user -d green_engine -c "CREATE EXTENSION IF NOT EXISTS timescaledb;"
+    docker-compose -f "$COMPOSE_FILE" exec postgres psql -U warif_user -d warif -c "CREATE EXTENSION IF NOT EXISTS timescaledb;"
     
     # Run database initialization
     if [ -f "scripts/setup_db.py" ]; then
@@ -301,7 +301,7 @@ show_deployment_info() {
 
 # Main deployment function
 main() {
-    log_info "Starting Green Engine production deployment..."
+    log_info "Starting Warif production deployment..."
     
     check_prerequisites
     create_directories

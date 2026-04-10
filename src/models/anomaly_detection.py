@@ -1,5 +1,5 @@
 """
-Anomaly Detection for Green Engine
+Anomaly Detection for Warif
 Detects anomalies in sensor data streams
 """
 
@@ -356,7 +356,7 @@ class AnomalyDetectionSystem:
 # Example usage
 if __name__ == "__main__":
     # Initialize anomaly detection system
-    db_connection = "postgresql://green_user:password@localhost:5432/green_engine"
+    db_connection = "postgresql://warif_user:password@localhost:5432/warif"
     anomaly_system = AnomalyDetectionSystem(db_connection)
     
     # Train models for different sensors

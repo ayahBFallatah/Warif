@@ -22,7 +22,6 @@ paho-mqtt==1.6.1
 requests==2.31.0
 
 # Database
-timescaledb==0.0.1
 alembic==1.12.1
 
 # Visualization

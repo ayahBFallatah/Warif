@@ -1,0 +1,36 @@
+services:
+  - type: web
+    name: warif-backend
+    runtime: python
+    pythonVersion: "3.11.0"
+    plan: free
+    autoDeploy: true
+    healthCheckPath: /health
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
+    startCommand: uvicorn src.api.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHONPATH
+        value: /opt/render/project/src
+      # CORS: frontend URLs allowed to access the API
+      - key: CORS_ORIGINS
+        value: "https://warif.netlify.app"
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: "5432"
+      - key: DB_NAME
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: API_SECRET_KEY
+        sync: false
+      - key: MQTT_BROKER
+        sync: false
+      - key: MQTT_PORT
+        value: "1883"
+      - key: LOG_LEVEL
+        value: INFO
+      - key: DEBUG
+        value: "false"

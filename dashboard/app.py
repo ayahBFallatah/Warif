@@ -1,6 +1,6 @@
 """
-Streamlit Dashboard for Green Engine
-Real-time monitoring and analytics for microgreen growth
+Warif Digital Twin Dashboard
+Real-time monitoring and analytics for smart farm irrigation
 """
 
 import streamlit as st
@@ -16,8 +16,8 @@ from typing import Optional, Dict, Any
 
 # Page configuration
 st.set_page_config(
-    page_title="Green Engine Dashboard",
-    page_icon="🌱",
+    page_title="Warif Digital Twin",
+    page_icon="💧",
     layout="wide",
     initial_sidebar_state="expanded"
 )

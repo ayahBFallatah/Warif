@@ -1,6 +1,6 @@
 """
-FastAPI REST API for Green Engine
-Provides endpoints for sensor data, predictions, and analytics
+Warif Digital Twin API
+Provides endpoints for sensor data, alerts, predictions, and farm control
 """
 from fastapi.openapi.utils import get_openapi
 from fastapi import FastAPI, HTTPException, Depends, Query
@@ -32,8 +32,8 @@ logger = logging.getLogger(__name__)
 
 # Initialize FastAPI app
 app = FastAPI(
-    title="Green Engine API",
-    description="IoT microgreen growth monitoring and analytics API",
+    title="Warif API",
+    description="Digital Twin API for smart farm irrigation monitoring",
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc",
@@ -50,18 +50,18 @@ def custom_openapi():
         return app.openapi_schema
     
     openapi_schema = get_openapi(
-        title="Green Engine API",
+        title="Warif API",
         version="1.0.0",
         description="""
-        ## Green Engine IoT Platform API
-        
-        A comprehensive RESTful API for managing IoT devices, sensor data, analytics, 
-        machine learning predictions, and user authentication in a smart greenhouse environment.
-        
+        ## Warif Digital Twin Platform API
+
+        A comprehensive RESTful API for managing IoT devices, sensor data, analytics,
+        machine learning predictions, and irrigation control for smart farms.
+
         ### Features
         - 🔐 JWT-based authentication and authorization
         - 📊 Real-time sensor data collection and analysis
-        - 🌱 Tray and crop management
+        - 💧 Irrigation monitoring and control
         - 🚨 Intelligent alerting system
         - 🤖 Machine learning predictions
         - 📈 Analytics and reporting
@@ -102,14 +102,20 @@ def custom_openapi():
 app.openapi = custom_openapi
 
 # Prometheus metrics
-REQUEST_COUNT = Counter('green_engine_api_requests_total', 'API Requests', ['method', 'endpoint'])
-REQUEST_LATENCY = Histogram('green_engine_api_request_duration_seconds', 'Request latency', ['endpoint'])
+REQUEST_COUNT = Counter('warif_api_requests_total', 'API Requests', ['method', 'endpoint'])
+REQUEST_LATENCY = Histogram('warif_api_request_duration_seconds', 'Request latency', ['endpoint'])
 
 # Add CORS middleware
+# Set CORS_ORIGINS env var as comma-separated URLs (e.g. "https://warif.onrender.com,https://yara-frontend.vercel.app")
+# If not set, defaults to allow all origins (development mode, no credentials)
+_cors_origins_env = os.getenv("CORS_ORIGINS", "")
+_cors_origins = [o.strip() for o in _cors_origins_env.split(",") if o.strip()] if _cors_origins_env else ["*"]
+_allow_credentials = bool(_cors_origins_env)  # credentials only work with explicit origins, not "*"
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
+    allow_origins=_cors_origins,
+    allow_credentials=_allow_credentials,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -120,8 +126,8 @@ def get_db_connection():
     try:
         connection = psycopg2.connect(
             host=os.getenv("DB_HOST", "postgres"),
-            database=os.getenv("DB_NAME", "green_engine"),
-            user=os.getenv("DB_USER", "green_user"),
+            database=os.getenv("DB_NAME", "warif"),
+            user=os.getenv("DB_USER", "warif_user"),
             password=os.getenv("DB_PASSWORD", "password"),
             port=os.getenv("DB_PORT", "5432")
         )
@@ -203,7 +209,7 @@ def publish_mqtt_command(device_id: str, command: Dict[str, Any]) -> bool:
     """Publish command to MQTT. Returns True on success."""
     broker_host = os.getenv("MQTT_BROKER", "localhost")
     broker_port = int(os.getenv("MQTT_PORT", "1883"))
-    base = os.getenv("MQTT_CMD_BASE", "greenengine")
+    base = os.getenv("MQTT_CMD_BASE", "warif")
     topic = f"{base}/{device_id}/cmd"
 
     try:
@@ -223,7 +229,7 @@ def publish_mqtt_command(device_id: str, command: Dict[str, Any]) -> bool:
 @app.get("/")
 async def root():
     """Root endpoint"""
-    return {"message": "Green Engine API", "version": "1.0.0"}
+    return {"message": "Warif API", "version": "1.0.0"}
 
 @app.get("/metrics")
 async def metrics():
@@ -832,9 +838,9 @@ async def get_forecast(
     try:
         # Build DB connection string for models
         db_dsn = (
-            f"postgresql://{os.getenv('DB_USER', 'green_user')}:{os.getenv('DB_PASSWORD', 'password')}@"
+            f"postgresql://{os.getenv('DB_USER', 'warif_user')}:{os.getenv('DB_PASSWORD', 'password')}@"
             f"{os.getenv('DB_HOST', 'postgres')}:{os.getenv('DB_PORT', '5432')}/"
-            f"{os.getenv('DB_NAME', 'green_engine')}"
+            f"{os.getenv('DB_NAME', 'warif')}"
         )
         models = GrowthForecastingModels(db_dsn)
         target_column_map = {
@@ -912,9 +918,9 @@ async def get_growth_forecast(
             # If no predictions exist, try to generate some using the ML models
             try:
                 db_dsn = (
-                    f"postgresql://{os.getenv('DB_USER', 'green_user')}:{os.getenv('DB_PASSWORD', 'password')}@"
+                    f"postgresql://{os.getenv('DB_USER', 'warif_user')}:{os.getenv('DB_PASSWORD', 'password')}@"
                     f"{os.getenv('DB_HOST', 'postgres')}:{os.getenv('DB_PORT', '5432')}/"
-                    f"{os.getenv('DB_NAME', 'green_engine')}"
+                    f"{os.getenv('DB_NAME', 'warif')}"
                 )
                 models = GrowthForecastingModels(db_dsn)
                 

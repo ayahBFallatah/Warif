@@ -1,5 +1,5 @@
 """
-Forecasting Models for Green Engine
+Forecasting Models for Warif
 Implements short-term and long-term forecasting for microgreen growth
 """
 
@@ -397,7 +397,7 @@ class GrowthForecastingModels:
 # Example usage
 if __name__ == "__main__":
     # Initialize models
-    db_connection = "postgresql://green_user:password@localhost:5432/green_engine"
+    db_connection = "postgresql://warif_user:password@localhost:5432/warif"
     models = GrowthForecastingModels(db_connection)
     
     # Train short-term forecast model

@@ -1,8 +1,8 @@
 {
   "dashboard": {
     "id": null,
-    "title": "Green Engine - System Overview",
-    "tags": ["green-engine", "overview"],
+    "title": "Warif - System Overview",
+    "tags": ["warif", "overview"],
     "style": "dark",
     "timezone": "browser",
     "panels": [
@@ -12,7 +12,7 @@
         "type": "stat",
         "targets": [
           {
-            "expr": "rate(green_engine_api_requests_total[5m])",
+            "expr": "rate(warif_api_requests_total[5m])",
             "legendFormat": "Requests/sec"
           }
         ],
@@ -38,7 +38,7 @@
         "type": "stat",
         "targets": [
           {
-            "expr": "histogram_quantile(0.95, rate(green_engine_api_request_duration_seconds_bucket[5m]))",
+            "expr": "histogram_quantile(0.95, rate(warif_api_request_duration_seconds_bucket[5m]))",
             "legendFormat": "95th percentile"
           }
         ],
@@ -65,7 +65,7 @@
         "type": "stat",
         "targets": [
           {
-            "expr": "rate(green_engine_api_requests_total{status=~\"5..\"}[5m])",
+            "expr": "rate(warif_api_requests_total{status=~\"5..\"}[5m])",
             "legendFormat": "Errors/sec"
           }
         ],
@@ -117,7 +117,7 @@
         "type": "graph",
         "targets": [
           {
-            "expr": "rate(green_engine_api_requests_total[5m])",
+            "expr": "rate(warif_api_requests_total[5m])",
             "legendFormat": "{{method}} {{endpoint}}"
           }
         ],
@@ -129,15 +129,15 @@
         "type": "graph",
         "targets": [
           {
-            "expr": "histogram_quantile(0.50, rate(green_engine_api_request_duration_seconds_bucket[5m]))",
+            "expr": "histogram_quantile(0.50, rate(warif_api_request_duration_seconds_bucket[5m]))",
             "legendFormat": "50th percentile"
           },
           {
-            "expr": "histogram_quantile(0.95, rate(green_engine_api_request_duration_seconds_bucket[5m]))",
+            "expr": "histogram_quantile(0.95, rate(warif_api_request_duration_seconds_bucket[5m]))",
             "legendFormat": "95th percentile"
           },
           {
-            "expr": "histogram_quantile(0.99, rate(green_engine_api_request_duration_seconds_bucket[5m]))",
+            "expr": "histogram_quantile(0.99, rate(warif_api_request_duration_seconds_bucket[5m]))",
             "legendFormat": "99th percentile"
           }
         ],

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Populate Green Engine Database with Sample Data
+Populate Warif Database with Sample Data
 This script creates realistic sample data for testing the dashboard
 """
 
@@ -21,8 +21,8 @@ def get_db_connection():
     try:
         connection = psycopg2.connect(
             host=os.getenv("DB_HOST", "postgres"),
-            database=os.getenv("DB_NAME", "green_engine"),
-            user=os.getenv("DB_USER", "green_user"),
+            database=os.getenv("DB_NAME", "warif"),
+            user=os.getenv("DB_USER", "warif_user"),
             password=os.getenv("DB_PASSWORD", "password"),
             port=os.getenv("DB_PORT", "5432")
         )
@@ -484,7 +484,7 @@ def populate_sample_alerts(conn):
 
 def main():
     """Main function to populate all sample data"""
-    print("🚀 Starting Green Engine Database Population...")
+    print("🚀 Starting Warif Database Population...")
     print("=" * 60)
     
     # Connect to database

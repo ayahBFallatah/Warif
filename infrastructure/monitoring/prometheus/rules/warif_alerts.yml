@@ -1,51 +1,51 @@
-# Green Engine Alerting Rules
+# Warif Alerting Rules
 groups:
-  - name: green_engine_api
+  - name: warif_api
     rules:
       - alert: APIHighErrorRate
-        expr: rate(green_engine_api_requests_total{status=~"5.."}[5m]) > 0.1
+        expr: rate(warif_api_requests_total{status=~"5.."}[5m]) > 0.1
         for: 2m
         labels:
           severity: critical
           service: api
         annotations:
-          summary: "High error rate detected in Green Engine API"
+          summary: "High error rate detected in Warif API"
           description: "API error rate is {{ $value }} errors per second for the last 5 minutes"
 
       - alert: APIHighResponseTime
-        expr: histogram_quantile(0.95, rate(green_engine_api_request_duration_seconds_bucket[5m])) > 2
+        expr: histogram_quantile(0.95, rate(warif_api_request_duration_seconds_bucket[5m])) > 2
         for: 5m
         labels:
           severity: warning
           service: api
         annotations:
-          summary: "High response time detected in Green Engine API"
+          summary: "High response time detected in Warif API"
           description: "95th percentile response time is {{ $value }} seconds"
 
       - alert: APIDown
-        expr: up{job="green-engine-api"} == 0
+        expr: up{job="warif-api"} == 0
         for: 1m
         labels:
           severity: critical
           service: api
         annotations:
-          summary: "Green Engine API is down"
+          summary: "Warif API is down"
           description: "API has been down for more than 1 minute"
 
-  - name: green_engine_worker
+  - name: warif_worker
     rules:
       - alert: WorkerDown
-        expr: up{job="green-engine-worker"} == 0
+        expr: up{job="warif-worker"} == 0
         for: 1m
         labels:
           severity: critical
           service: worker
         annotations:
-          summary: "Green Engine Command Worker is down"
+          summary: "Warif Command Worker is down"
           description: "Command worker has been down for more than 1 minute"
 
       - alert: WorkerHighCommandQueue
-        expr: green_engine_worker_commands_queued > 100
+        expr: warif_worker_commands_queued > 100
         for: 5m
         labels:
           severity: warning
@@ -55,7 +55,7 @@ groups:
           description: "Command queue has {{ $value }} pending commands"
 
       - alert: WorkerHighFailureRate
-        expr: rate(green_engine_worker_commands_failed_total[5m]) > 0.1
+        expr: rate(warif_worker_commands_failed_total[5m]) > 0.1
         for: 2m
         labels:
           severity: warning
@@ -64,7 +64,7 @@ groups:
           summary: "High command failure rate in worker"
           description: "Command failure rate is {{ $value }} failures per second"
 
-  - name: green_engine_database
+  - name: warif_database
     rules:
       - alert: DatabaseDown
         expr: up{job="postgres"} == 0
@@ -96,7 +96,7 @@ groups:
           summary: "High database disk usage"
           description: "Database size is {{ $value }} GB"
 
-  - name: green_engine_mqtt
+  - name: warif_mqtt
     rules:
       - alert: MQTTBrokerDown
         expr: up{job="mosquitto"} == 0
@@ -118,7 +118,7 @@ groups:
           summary: "High MQTT message rate"
           description: "MQTT message rate is {{ $value }} messages per second"
 
-  - name: green_engine_system
+  - name: warif_system
     rules:
       - alert: HighCPUUsage
         expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80

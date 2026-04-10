@@ -1,5 +1,5 @@
 """
-Green Engine RBAC Middleware
+Warif RBAC Middleware
 Handles authentication and authorization for API endpoints
 """
 
