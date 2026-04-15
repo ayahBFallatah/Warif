@@ -774,58 +774,60 @@ async def list_trays(
     except Exception as e:
         logger.error(f"Error listing trays: {e}")
         raise HTTPException(status_code=500, detail="Failed to list trays")
-
-@app.get("/api/v1/analytics/summary")
-async def get_analytics_summary(location: str = Query(..., description="Location identifier")):
-    """Get analytics summary"""
+@app.get("/api/v1/analytics/digital-twin-state")
+async def get_digital_twin_state(location: str = Query(..., description="Location identifier")):
+    """Get the current digital twin state for a specific location"""
     try:
         conn = get_db_connection()
         
-        # Get latest sensor readings
-        sensor_query = """
-        SELECT sensor_type, AVG(value) as avg_value, COUNT(*) as reading_count
+        query = """
+        SELECT DISTINCT ON (sensor_type)
+            sensor_type, value, timestamp
         FROM sensor_readings
-        WHERE location = %s AND timestamp >= NOW() - INTERVAL '24 hours'
-        GROUP BY sensor_type
+        WHERE location = %s
+        ORDER BY sensor_type, timestamp DESC
         """
         
-        sensor_df = pd.read_sql_query(sensor_query, conn, params=[location])
+        df = pd.read_sql_query(query, conn, params=[location])
         
-        # Get latest growth measurements
-        growth_query = """
-        SELECT crop_type, AVG(yield_g) as avg_yield, COUNT(*) as measurement_count
-        FROM growth_measurements
-        WHERE location = %s AND timestamp >= NOW() - INTERVAL '7 days'
-        GROUP BY crop_type
-        """
-        
-        growth_df = pd.read_sql_query(growth_query, conn, params=[location])
-        
-        # Get active alerts
-        alert_query = """
-        SELECT COUNT(*) as active_alerts
-        FROM alerts
-        WHERE location = %s AND status = 'active'
-        """
-        
-        alert_df = pd.read_sql_query(alert_query, conn, params=[location])
-        
-        return {
-            "location": location,
-            "sensor_summary": sensor_df.to_dict('records'),
-            "growth_summary": growth_df.to_dict('records'),
-            "active_alerts": int(alert_df['active_alerts'].iloc[0]) if not alert_df.empty else 0
+        state_dict = {
+            "temperature": None,
+            "humidity": None,
+            "light": None,
+            "soil_moisture": None,
+            "ec": None,
+            "co2": None
         }
-    
-    except Exception as e:
-        logger.error(f"Error retrieving analytics summary: {e}")
-        # Return empty data instead of crashing
+        
+        last_update = None
+        
+        if not df.empty:
+            last_ts = df['timestamp'].max()
+            last_update = last_ts.isoformat() if pd.notnull(last_ts) else None
+            
+            for _, row in df.iterrows():
+                state_dict[row['sensor_type']] = float(row['value'])
+                
         return {
             "location": location,
-            "sensor_summary": [],
-            "growth_summary": [],
-            "active_alerts": 0,
-            "message": "No analytics data available or database error occurred"
+            "last_update": last_update,
+            "state": state_dict
+        }
+        
+    except Exception as e:
+        logger.error(f"Error retrieving digital twin state: {e}")
+        return {
+            "location": location,
+            "last_update": None,
+            "state": {
+                "temperature": None,
+                "humidity": None,
+                "light": None,
+                "soil_moisture": None,
+                "ec": None,
+                "co2": None
+            },
+            "message": "No digital twin state available or database error occurred"
         }
 
 @app.get("/api/v1/predictions/forecast")
