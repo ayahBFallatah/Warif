@@ -46,3 +46,9 @@ structlog==23.2.0
 
 python-jose[cryptography]
 email-validator
+
+# Additional for ML Pipeline
+kaggle==1.6.6
+scipy==1.11.4
+optuna==3.14.1
+tensorflow==2.14.1
