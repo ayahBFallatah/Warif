@@ -43,7 +43,7 @@ def create_database_schema():
         # Create sensor_readings table
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS sensor_readings (
-                id BIGSERIAL PRIMARY KEY,
+                id BIGSERIAL,
                 timestamp TIMESTAMPTZ NOT NULL,
                 sensor_id VARCHAR(50) NOT NULL,
                 location VARCHAR(50) NOT NULL,
@@ -54,6 +54,7 @@ def create_database_schema():
                 signal_strength INTEGER CHECK (signal_strength >= -100 AND signal_strength <= 0),
                 created_at TIMESTAMPTZ DEFAULT NOW(),
                 
+                PRIMARY KEY (timestamp, id),
                 CONSTRAINT idx_sensor_readings_timestamp UNIQUE (timestamp, sensor_id)
             );
         """)
@@ -261,7 +262,7 @@ def create_database_schema():
         
         # Convert tables to hypertables
         try:
-            cursor.execute("SELECT create_hypertable('sensor_readings', 'timestamp', chunk_time_interval => INTERVAL '1 day');")
+            cursor.execute("SELECT create_hypertable('sensor_readings', 'timestamp', chunk_time_interval => INTERVAL '1 day', if_not_exists => TRUE);")
             logger.info("sensor_readings converted to hypertable")
         except Exception as e:
             logger.info(f"sensor_readings hypertable already exists: {e}")
@@ -282,6 +283,8 @@ def create_database_schema():
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_sensor_readings_sensor_id ON sensor_readings (sensor_id);")
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_sensor_readings_location ON sensor_readings (location);")
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_sensor_readings_sensor_type ON sensor_readings (sensor_type);")
+        cursor.execute("CREATE INDEX IF NOT EXISTS idx_sensor_readings_loc_type_time ON sensor_readings (location, sensor_type, timestamp DESC);")
+        cursor.execute("CREATE INDEX IF NOT EXISTS idx_sensor_readings_loc_time ON sensor_readings (location, timestamp DESC);")
         
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_processed_features_location ON processed_features (location);")
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_processed_features_timestamp ON processed_features (timestamp);")
@@ -393,5 +396,5 @@ def insert_sample_data():
 if __name__ == "__main__":
     print("Setting up Warif database...")
     create_database_schema()
-    insert_sample_data()
+    # insert_sample_data()
     print("Database setup completed successfully!")

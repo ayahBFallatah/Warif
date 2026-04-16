@@ -19,6 +19,7 @@ from src.models.prediction_service import get_prediction_service
 from src.auth.middleware import get_current_user, require_permission, require_admin, require_operator_or_admin, log_audit_event, Permissions
 from src.auth.authentication import User
 import json
+import redis
 import logging
 import paho.mqtt.client as mqtt
 from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
@@ -118,6 +119,14 @@ app.add_middleware(
     allow_credentials=_allow_credentials,
     allow_methods=["*"],
     allow_headers=["*"],
+)
+
+# Redis connection
+redis_client = redis.Redis(
+    host=os.getenv("REDIS_HOST", "redis"),
+    port=int(os.getenv("REDIS_PORT", "6379")),
+    password=os.getenv("REDIS_PASSWORD", "redispass"),
+    decode_responses=True
 )
 
 # Database connection
@@ -777,6 +786,17 @@ async def list_trays(
 @app.get("/api/v1/analytics/digital-twin-state")
 async def get_digital_twin_state(location: str = Query(..., description="Location identifier")):
     """Get the current digital twin state for a specific location"""
+    cache_key = f"digital_twin_state:{location}"
+    
+    # Try Redis first
+    try:
+        cached_data = redis_client.get(cache_key)
+        if cached_data:
+            return json.loads(cached_data)
+    except Exception as e:
+        logger.error(f"Redis cache read error: {e}")
+        # Continue to PostgreSQL if Redis fails
+
     try:
         conn = get_db_connection()
         
@@ -808,11 +828,19 @@ async def get_digital_twin_state(location: str = Query(..., description="Locatio
             for _, row in df.iterrows():
                 state_dict[row['sensor_type']] = float(row['value'])
                 
-        return {
+        response_data = {
             "location": location,
             "last_update": last_update,
             "state": state_dict
         }
+        
+        # Store in Redis
+        try:
+            redis_client.setex(cache_key, 60, json.dumps(response_data))
+        except Exception as e:
+            logger.error(f"Redis cache write error: {e}")
+            
+        return response_data
         
     except Exception as e:
         logger.error(f"Error retrieving digital twin state: {e}")
