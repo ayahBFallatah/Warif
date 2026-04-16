@@ -110,27 +110,27 @@ requirements.txt  ✅ إضافة مكتبات إضافية:
 
 ```python
 # 1. تحميل البيانات
-from src.models.data_loader import KaggleDataLoader
+from src.data.data_loader import KaggleDataLoader
 
 loader = KaggleDataLoader()
 loader.download_dataset("dataset/cucumber-growth-data")
 
 # 2. تنظيف البيانات
-from src.models.data_processor import process_cucumber_data
+from src.data.data_processor import process_cucumber_data
 
 df_clean = process_cucumber_data(
     input_csv='data/raw/cucumber_growth_data.csv'
 )
 
 # 3. هندسة الميزات
-from src.models.feature_engineering import prepare_features
+from src.features.feature_engineering import prepare_features
 
 df_features = prepare_features(
     input_csv='data/processed/cucumber_clean.csv'
 )
 
 # 4. التدريب (قادم قريباً)
-from src.models.train_models import ModelTrainer
+from src.train.train_models import ModelTrainer
 
 trainer = ModelTrainer(
     data_path='data/processed/cucumber_features.csv'
@@ -142,13 +142,13 @@ trainer.train_all_models()
 
 ```bash
 # تحميل
-python -m src.models.data_loader --download "dataset/cucumber-growth-data"
+python -m src.data.data_loader --download "dataset/cucumber-growth-data"
 
 # عرض الملفات
-python -m src.models.data_loader --list
+python -m src.data.data_loader --list
 
 # التنظيف والميزات (تلقائي من خلال الكود)
-python -c "from src.models.data_processor import process_cucumber_data; process_cucumber_data('data/raw/*.csv')"
+python -c "from src.data.data_processor import process_cucumber_data; process_cucumber_data('data/raw/*.csv')"
 ```
 
 ---
@@ -232,7 +232,7 @@ python -c "from src.models.data_processor import process_cucumber_data; process_
 
 3. 💻 **ابدأ الكود مباشرة:**
    ```python
-   from src.models.data_loader import KaggleDataLoader
+   from src.data.data_loader import KaggleDataLoader
    # ... ابدأ!
    ```
 

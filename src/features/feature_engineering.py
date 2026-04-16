@@ -1,6 +1,6 @@
 """
 Feature Engineering for Warif ML Pipeline
-استخلاص الميزات المتقدمة من بيانات الخيار
+ Features    Cucumber
 """
 
 import logging
@@ -16,19 +16,19 @@ PROCESSED_DATA_DIR = DATA_DIR / "processed"
 
 class FeatureEngineer:
     """
-    استخلاص ميزات متقدمة من البيانات
+        
     """
 
     def __init__(self, df: pd.DataFrame):
         self.df = df.copy()
         self.original_shape = df.shape
-        logger.info("✅ تم تهيئة Feature Engineer")
+        logger.info("   Feature Engineer")
 
     def add_temporal_features(self) -> pd.DataFrame:
         """
-        إضافة ميزات زمنية من datetime index
+            datetime index
         """
-        logger.info("⏰ إضافة الميزات الزمنية...")
+        logger.info("  Features ...")
 
         if isinstance(self.df.index, pd.DatetimeIndex):
             self.df['hour'] = self.df.index.hour
@@ -36,19 +36,19 @@ class FeatureEngineer:
             self.df['day_of_year'] = self.df.index.dayofyear
             self.df['month'] = self.df.index.month
 
-            # ميزات دورية
+            #  
             self.df['hour_sin'] = np.sin(2 * np.pi * self.df['hour'] / 24)
             self.df['hour_cos'] = np.cos(2 * np.pi * self.df['hour'] / 24)
 
-            logger.info("✅ تم إضافة الميزات الزمنية")
+            logger.info("   Features ")
 
         return self.df
 
     def add_lagged_features(self, windows: list = [1, 6, 24]) -> pd.DataFrame:
         """
-        إضافة ميزات متأخرة (Lagged Features)
+           (Lagged Features)
         """
-        logger.info(f"🔄 إضافة ميزات متأخرة...")
+        logger.info(f"   ...")
 
         numeric_cols = self.df.select_dtypes(include=[np.number]).columns
 
@@ -56,14 +56,14 @@ class FeatureEngineer:
             for window in windows:
                 self.df[f'{col}_lag_{window}h'] = self.df[col].shift(window)
 
-        logger.info(f"✅ تم إضافة ميزات متأخرة")
+        logger.info(f"    ")
         return self.df
 
     def add_rolling_features(self, windows: list = [6, 24]) -> pd.DataFrame:
         """
-        إضافة ميزات متحركة (Rolling Features)
+           (Rolling Features)
         """
-        logger.info(f"📊 إضافة ميزات متحركة...")
+        logger.info(f"   ...")
 
         numeric_cols = self.df.select_dtypes(include=[np.number]).columns
 
@@ -76,16 +76,16 @@ class FeatureEngineer:
                     self.df[col].rolling(window=window, min_periods=1).std()
                 )
 
-        logger.info(f"✅ تم إضافة ميزات متحركة")
+        logger.info(f"    ")
         return self.df
 
     def add_interaction_features(self) -> pd.DataFrame:
         """
-        إضافة ميزات التفاعل (Interaction Features)
+           (Interaction Features)
         """
-        logger.info("🔗 إضافة ميزات التفاعل...")
+        logger.info("   ...")
 
-        # التفاعلات الأساسية للخيار
+        #   
         if 'temperature' in self.df.columns and 'humidity' in self.df.columns:
             self.df['temp_humidity'] = (
                 self.df['temperature'] * self.df['humidity'] / 100
@@ -97,18 +97,18 @@ class FeatureEngineer:
             )
 
         if 'temperature' in self.df.columns and 'humidity' in self.df.columns:
-            # VPD Indicator (مؤشر الإجهاد للنبات)
+            # VPD Indicator (  )
             self.df['vpd'] = self.df['temperature'] / (self.df['humidity'] + 1)
 
-        logger.info("✅ تم إضافة ميزات التفاعل")
+        logger.info("    ")
         return self.df
 
     def engineer_features(self) -> pd.DataFrame:
         """
-        استخلاص جميع الميزات
+          Features
         """
         logger.info("\n" + "="*60)
-        logger.info("🛠️ بدء هندسة الميزات")
+        logger.info("  Feature Engineering")
         logger.info("="*60 + "\n")
 
         self.add_temporal_features()
@@ -116,26 +116,26 @@ class FeatureEngineer:
         self.add_rolling_features(windows=[6, 24])
         self.add_interaction_features()
 
-        # حذف القيم الناقصة الناتجة من lagged features
-        self.df = self.df.dropna()
+        #      lagged features
+        self.df = self.df.fillna(0)
 
-        logger.info(f"\n📊 الأعمدة الأصلية: {self.original_shape[1]}")
-        logger.info(f"📊 الأعمدة الجديدة: {self.df.shape[1]}")
-        logger.info(f"📊 الصفوف المتبقية: {self.df.shape[0]:,}")
-        logger.info(f"📊 إجمالي الميزات المستخلصة: {self.df.shape[1] - self.original_shape[1]}\n")
+        logger.info(f"\n  : {self.original_shape[1]}")
+        logger.info(f"  : {self.df.shape[1]}")
+        logger.info(f"  : {self.df.shape[0]:,}")
+        logger.info(f"  Features : {self.df.shape[1] - self.original_shape[1]}\n")
 
         return self.df
 
 
 class FeatureSelector:
     """
-    اختيار أهم الميزات
+    Select  Features
     """
 
     @staticmethod
     def get_sensor_features() -> list:
         """
-        الحصول على ميزات الحساسات الأساسية
+            
         """
         return [
             'temperature', 'humidity', 'light', 'soil_moisture', 'ec', 'co2'
@@ -144,7 +144,7 @@ class FeatureSelector:
     @staticmethod
     def get_temporal_features() -> list:
         """
-        الحصول على الميزات الزمنية
+          Features 
         """
         return ['hour', 'day_of_week', 'month', 'hour_sin', 'hour_cos']
 
@@ -155,16 +155,16 @@ class FeatureSelector:
         top_n: int = 15
     ) -> pd.DataFrame:
         """
-        إيجاد أكثر الميزات ارتباطاً بـ target
+          Features   target
         """
         if target_col not in df.columns:
-            logger.warning(f"⚠️ العمود {target_col} غير موجود")
+            logger.warning(f"  {target_col}  ")
             return None
 
         correlations = df.corr()[target_col].sort_values(ascending=False)
-        top_features = correlations.head(top_n + 1)[1:]  # تجاهل الارتباط مع النفس
+        top_features = correlations.head(top_n + 1)[1:]  #    
 
-        logger.info(f"\n📊 أفضل {top_n} ميزة ارتباطاً بـ {target_col}:")
+        logger.info(f"\n  {top_n}    {target_col}:")
         for feat, corr in top_features.items():
             logger.info(f"   {feat:25}: {corr:7.4f}")
 
@@ -173,26 +173,26 @@ class FeatureSelector:
 
 def prepare_features(input_csv: str, output_name: str = "cucumber_features") -> pd.DataFrame:
     """
-    تحضير الميزات من البيانات النظيفة
+     Features   
 
     Args:
-        input_csv: مسار ملف البيانات النظيفة
-        output_name: اسم ملف المخرجات
+        input_csv:    
+        output_name:   
 
     Returns:
-        pd.DataFrame: البيانات مع الميزات
+        pd.DataFrame:   Features
     """
-    logger.info(f"📥 تحميل: {input_csv}")
+    logger.info(f" : {input_csv}")
     df = pd.read_csv(input_csv, index_col=0, parse_dates=True)
 
-    # استخلاص الميزات
+    #  Features
     engineer = FeatureEngineer(df)
     df_features = engineer.engineer_features()
 
-    # حفظ البيانات
+    # Save 
     output_path = PROCESSED_DATA_DIR / f"{output_name}.csv"
     df_features.to_csv(output_path)
-    logger.info(f"💾 تم الحفظ: {output_path}\n")
+    logger.info(f"  Save: {output_path}\n")
 
     return df_features
 
@@ -200,10 +200,10 @@ def prepare_features(input_csv: str, output_name: str = "cucumber_features") -> 
 if __name__ == "__main__":
     from data_loader import KaggleDataLoader
 
-    # مثال
+    # 
     csv_files = KaggleDataLoader.list_available_files()
     if csv_files:
-        # افترض أن البيانات تم تنظيفها بالفعل
+        #      
         processed_file = PROCESSED_DATA_DIR / "cucumber_processed.csv"
         if processed_file.exists():
             df = prepare_features(str(processed_file))

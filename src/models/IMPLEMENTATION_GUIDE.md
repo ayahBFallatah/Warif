@@ -66,7 +66,7 @@ dataset/greenhouse-climate-data           Greenhouse Climate Data       100 MB  
 
 #### أ) من داخل Python:
 ```python
-from src.models.data_loader import KaggleDataLoader
+from src.data.data_loader import KaggleDataLoader
 
 # تحميل dataset
 loader = KaggleDataLoader()
@@ -78,12 +78,12 @@ files = loader.list_available_files()
 
 #### ب) من سطر الأوامر:
 ```bash
-python -m src.models.data_loader --download "dataset/cucumber-growth-data"
+python -m src.data.data_loader --download "dataset/cucumber-growth-data"
 ```
 
 #### ج) عرض الملفات:
 ```bash
-python -m src.models.data_loader --list
+python -m src.data.data_loader --list
 ```
 
 **المتوقع:**
@@ -100,7 +100,7 @@ python -m src.models.data_loader --list
 
 #### من داخل Python:
 ```python
-from src.models.data_processor import process_cucumber_data
+from src.data.data_processor import process_cucumber_data
 
 # معالجة شاملة
 df_clean = process_cucumber_data(
@@ -134,7 +134,7 @@ print(df_clean.head())
 
 #### من داخل Python:
 ```python
-from src.models.feature_engineering import prepare_features
+from src.features.feature_engineering import prepare_features
 
 # تحضير الميزات
 df_features = prepare_features(
@@ -177,7 +177,7 @@ print(f"عدد الصفوف: {df_features.shape[0]:,}")
 بعد تحضير الميزات، سيتم التدريب على النماذج الأربعة:
 
 ```python
-from src.models.train_models import ModelTrainer
+from src.train.train_models import ModelTrainer
 
 trainer = ModelTrainer(
     data_path='data/processed/cucumber_features.csv'

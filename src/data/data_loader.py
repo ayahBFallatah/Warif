@@ -1,6 +1,6 @@
 """
 Data Loader for Warif ML Pipeline
-تحميل بيانات الخيار من Kaggle وتحضيرها
+Loading and preparing cucumber data from Kaggle
 """
 
 import os
@@ -10,36 +10,35 @@ from pathlib import Path
 from typing import Optional, Dict
 from datetime import datetime
 
-# إعداد logging
+# Setup logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# تحديد مجلد البيانات
+# Define data directories
 DATA_DIR = Path(__file__).parent.parent.parent / "data"
 RAW_DATA_DIR = DATA_DIR / "raw"
 PROCESSED_DATA_DIR = DATA_DIR / "processed"
 
-# إنشاء المجلدات إذا لم تكن موجودة
+# Create directories if they do not exist
 RAW_DATA_DIR.mkdir(parents=True, exist_ok=True)
 PROCESSED_DATA_DIR.mkdir(parents=True, exist_ok=True)
 
-
 class KaggleDataLoader:
     """
-    تحميل البيانات من Kaggle
+    Load Data from Kaggle
     """
 
     @staticmethod
     def download_dataset(dataset_name: str, force_download: bool = False) -> bool:
         """
-        تحميل dataset من Kaggle
+        Download dataset from Kaggle
 
         Args:
-            dataset_name: اسم dataset (مثل: 'dataset/cucumber-growth-data')
-            force_download: إذا كان True، حمّل حتى لو كان موجود
+            dataset_name: dataset name (e.g. 'dataset/cucumber-growth-data')
+            force_download: if True, download even if exists
 
         Returns:
-            bool: نجاح التحميل
+            bool: Download success status
         """
         try:
             from kaggle.api.kaggle_api_extended import KaggleApi
@@ -47,86 +46,86 @@ class KaggleDataLoader:
             api = KaggleApi()
             api.authenticate()
 
-            logger.info(f"📥 تحميل dataset: {dataset_name}")
+            logger.info(f"Downloading dataset: {dataset_name}")
             api.dataset_download_files(
                 dataset_name,
                 path=str(RAW_DATA_DIR),
                 unzip=True
             )
-            logger.info(f"✅ تم التحميل بنجاح إلى: {RAW_DATA_DIR}")
+            logger.info(f"Successfully downloaded to: {RAW_DATA_DIR}")
             return True
 
         except Exception as e:
-            logger.error(f"❌ خطأ في التحميل: {e}")
+            logger.error(f"Download Error: {e}")
             return False
 
     @staticmethod
     def list_available_files() -> list:
         """
-        عرض ملفات CSV المتاحة
+        List available CSV files
         """
         csv_files = list(RAW_DATA_DIR.glob("*.csv"))
         if not csv_files:
-            logger.warning("⚠️ لا توجد ملفات CSV في data/raw/")
+            logger.warning("No CSV files available in data/raw/")
             return []
 
-        logger.info("📋 الملفات المتاحة:")
+        logger.info("Available Files:")
         for f in csv_files:
             file_size = f.stat().st_size / 1024 / 1024  # MB
-            logger.info(f"  ✓ {f.name} ({file_size:.2f} MB)")
+            logger.info(f"  - {f.name} ({file_size:.2f} MB)")
         return csv_files
 
     @staticmethod
     def load_csv(file_path: str) -> pd.DataFrame:
         """
-        تحميل ملف CSV
+        Load CSV file
 
         Args:
-            file_path: مسار ملف CSV
+            file_path: CSV file path
 
         Returns:
-            pd.DataFrame: البيانات
+            pd.DataFrame: Data
         """
         try:
-            logger.info(f"📂 تحميل: {Path(file_path).name}")
+            logger.info(f"Loading: {Path(file_path).name}")
             df = pd.read_csv(file_path)
-            logger.info(f"✅ تم التحميل: {df.shape[0]:,} صف، {df.shape[1]} عمود")
+            logger.info(f"Loaded: {df.shape[0]:,} rows, {df.shape[1]} columns")
             return df
         except Exception as e:
-            logger.error(f"❌ خطأ: {e}")
+            logger.error(f"Error: {e}")
             return None
 
 
 class DataInfo:
     """
-    عرض معلومات البيانات
+    Display data info
     """
 
     @staticmethod
     def show_info(df: pd.DataFrame):
         """
-        عرض معلومات مفصلة عن البيانات
+        Display detailed information about the data
         """
         if df is None or df.empty:
-            logger.warning("⚠️ البيانات فارغة")
+            logger.warning("Data is empty")
             return
 
         logger.info("\n" + "="*60)
-        logger.info("📊 معلومات البيانات:")
+        logger.info("Data Information:")
         logger.info("="*60)
 
-        logger.info(f"📈 عدد الصفوف: {len(df):,}")
-        logger.info(f"📊 عدد الأعمدة: {len(df.columns)}")
-        logger.info(f"💾 حجم الذاكرة: {df.memory_usage(deep=True).sum() / 1024**2:.2f} MB")
+        logger.info(f"Row Count: {len(df):,}")
+        logger.info(f"Column Count: {len(df.columns)}")
+        logger.info(f"Memory Size: {df.memory_usage(deep=True).sum() / 1024**2:.2f} MB")
 
-        logger.info("\n📋 الأعمدة:")
+        logger.info("\nColumns:")
         for i, col in enumerate(df.columns, 1):
             dtype = df[col].dtype
             missing = df[col].isnull().sum()
             missing_pct = (missing / len(df)) * 100
             logger.info(f"  {i}. {col:20} | {str(dtype):15} | Missing: {missing_pct:.2f}%")
 
-        logger.info("\n📊 القيم الإحصائية:")
+        logger.info("\nStatistical Values:")
         logger.info(df.describe().to_string())
 
         logger.info("\n" + "="*60 + "\n")
@@ -134,34 +133,34 @@ class DataInfo:
 
 def main():
     """
-    مثال على الاستخدام
+    Usage example
     """
-    logger.info("🚀 Warif Data Loader")
+    logger.info("Warif Data Loader")
     logger.info("="*60)
 
-    # عرض الملفات المتاحة
-    logger.info("\n1️⃣ الملفات المتاحة:")
+    # List available files
+    logger.info("\n1. Available Files:")
     csv_files = KaggleDataLoader.list_available_files()
 
     if not csv_files:
         logger.info("""
-        💡 لتحميل البيانات من Kaggle:
-           python -m src.models.data_loader --download "dataset/cucumber-growth-data"
+        To download data from Kaggle:
+           python -m src.data.data_loader --download "dataset/cucumber-growth-data"
 
-        أمثلة على Kaggle datasets:
+        Kaggle dataset examples:
            - dataset/cucumber-growth-data
            - dataset/greenhouse-climate-data
            - dataset/plant-yield-prediction
         """)
         return
 
-    # اختيار أول ملف
+    # Select first file
     csv_file = csv_files[0]
-    logger.info(f"\n2️⃣ تحميل ملف: {csv_file.name}")
+    logger.info(f"\n2. Loading file: {csv_file.name}")
     df = KaggleDataLoader.load_csv(str(csv_file))
 
     if df is not None:
-        logger.info(f"\n3️⃣ عرض معلومات البيانات:")
+        logger.info(f"\n3. Data Information:")
         DataInfo.show_info(df)
 
 

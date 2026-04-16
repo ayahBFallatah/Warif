@@ -1,6 +1,6 @@
 """
 Configuration for Warif ML Models
-الإعدادات المركزية للنماذج
+Central Configurations for Models
 """
 
 from pathlib import Path
@@ -20,7 +20,7 @@ for directory in [RAW_DATA_DIR, PROCESSED_DATA_DIR, MODELS_DIR]:
 # ================== Crop Configuration ==================
 CROP_TYPE = "cucumber"
 
-# نطاقات القيم الآمنة للخيار
+# Safe value ranges for Cucumber
 CUCUMBER_RANGES = {
     "temperature": {"min": 15, "max": 30, "optimal": (20, 25)},
     "humidity": {"min": 40, "max": 90, "optimal": (70, 80)},
@@ -32,11 +32,11 @@ CUCUMBER_RANGES = {
 
 # ================== ML Models Configuration ==================
 
-# Forecasting Model (التنبؤ بـ 72 ساعة قادمة)
+# Forecasting Model (72-hour forecasting)
 FORECASTING_CONFIG = {
     "model_type": "xgboost",
-    "forecast_horizon": 72,  # ساعة
-    "window_size": 168,  # 7 أيام lookback
+    "forecast_horizon": 72,  # hours
+    "window_size": 168,  # 7 days lookback
     "hyperparameters": {
         "n_estimators": 100,
         "max_depth": 5,
@@ -46,7 +46,7 @@ FORECASTING_CONFIG = {
     },
 }
 
-# Anomaly Detection Model (كشف الشذوذ)
+# Anomaly Detection Model (Anomaly Detection)
 ANOMALY_CONFIG = {
     "model_type": "isolation_forest",
     "hyperparameters": {
@@ -55,7 +55,7 @@ ANOMALY_CONFIG = {
     },
 }
 
-# Yield Prediction Model (التنبؤ بالإنتاجية)
+# Yield Prediction Model (Yield Prediction)
 YIELD_CONFIG = {
     "model_type": "random_forest",
     "hyperparameters": {
@@ -65,7 +65,7 @@ YIELD_CONFIG = {
     },
 }
 
-# Irrigation Optimizer (تحسين الري)
+# Irrigation Optimizer (Irrigation Optimization)
 IRRIGATION_CONFIG = {
     "model_type": "gradient_boosting",
     "hyperparameters": {
@@ -115,4 +115,4 @@ logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 
-print("✅ Configuration loaded successfully")
+print("Configuration loaded successfully")

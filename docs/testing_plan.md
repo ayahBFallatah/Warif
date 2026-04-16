@@ -94,7 +94,7 @@ class TestSensorDataValidation:
 # tests/test_etl.py
 import pytest
 import pandas as pd
-from src.etl.feature_engineering import FeatureEngineeringPipeline
+from src.features.etl_feature_engineering import FeatureEngineeringPipeline
 from datetime import datetime, timedelta
 
 class TestFeatureEngineering:
@@ -309,7 +309,7 @@ class TestAPIEndpoints:
 # tests/test_database_integration.py
 import pytest
 import psycopg2
-from src.etl.feature_engineering import FeatureEngineeringPipeline
+from src.features.etl_feature_engineering import FeatureEngineeringPipeline
 
 class TestDatabaseIntegration:
     @pytest.fixture

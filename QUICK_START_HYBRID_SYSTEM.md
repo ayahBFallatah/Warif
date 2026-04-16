@@ -34,7 +34,7 @@ kaggle datasets list -s cucumber
 
 ```bash
 python -c "
-from src.models.data_loader import KaggleDataLoader
+from src.data.data_loader import KaggleDataLoader
 loader = KaggleDataLoader()
 loader.download_dataset('dataset/cucumber-growth-data')
 loader.list_available_files()
@@ -43,7 +43,7 @@ loader.list_available_files()
 
 **أو من Python:**
 ```python
-from src.models.data_loader import KaggleDataLoader
+from src.data.data_loader import KaggleDataLoader
 
 loader = KaggleDataLoader()
 loader.download_dataset("dataset/cucumber-growth-data")
@@ -54,7 +54,7 @@ loader.download_dataset("dataset/cucumber-growth-data")
 ### 4️⃣ تنظيف البيانات (3 دقائق)
 
 ```python
-from src.models.data_processor import process_cucumber_data
+from src.data.data_processor import process_cucumber_data
 
 df_clean = process_cucumber_data(
     input_csv='data/raw/cucumber_growth_data.csv'
@@ -72,7 +72,7 @@ df_clean = process_cucumber_data(
 ### 5️⃣ هندسة الميزات (3 دقائق)
 
 ```python
-from src.models.feature_engineering import prepare_features
+from src.features.feature_engineering import prepare_features
 
 df_features = prepare_features(
     input_csv='data/processed/cucumber_clean.csv'
@@ -91,7 +91,7 @@ df_features = prepare_features(
 ### 6️⃣ التدريب (قريباً)
 
 ```python
-from src.models.train_models import ModelTrainer
+from src.train.train_models import ModelTrainer
 
 trainer = ModelTrainer(
     data_path='data/processed/cucumber_features.csv'
